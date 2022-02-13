@@ -12,13 +12,13 @@
 
   <!-- <url>http://www.example.com</url> -->
 
+  <modules>
+    <module>app-security-client</module>
+  </modules>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
   </properties>
-
-  <modules>
-    <module>app-security-client</module>
-  </modules>
 </project>
