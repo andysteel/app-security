@@ -2,9 +2,9 @@ package com.gmail.andersoninfonet.appsecurityclient.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.gmail.andersoninfonet.appsecurityclient.dto.MessageResponse;
 import com.gmail.andersoninfonet.appsecurityclient.dto.UserRequest;
 import com.gmail.andersoninfonet.appsecurityclient.dto.UserResponse;
-import com.gmail.andersoninfonet.appsecurityclient.dto.VerificationResponse;
 import com.gmail.andersoninfonet.appsecurityclient.event.RegistrationCompleteEvent;
 import com.gmail.andersoninfonet.appsecurityclient.service.UserService;
 
@@ -36,14 +36,30 @@ public class RegistrationController {
     }
 
     @GetMapping("/verifyRegistration")
-    public ResponseEntity<VerificationResponse> verifyUser(@RequestParam("token") String token) {
+    public ResponseEntity<MessageResponse> verifyUser(@RequestParam("token") String token) {
         var isValid = userService.validateVerificationToken(token);
 
         if(isValid) {
-            return ResponseEntity.ok(new VerificationResponse("User successfully enabled !"));
+            return ResponseEntity.ok(new MessageResponse("User successfully enabled !"));
         }
         
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new VerificationResponse("Token expired, user not enabled !"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Token expired, user not enabled !"));
+    }
+
+    @GetMapping("/resendVerifyToken")
+    public ResponseEntity<MessageResponse> resendVerifyToken(@RequestParam("email") String  email, final HttpServletRequest request) {
+        var wrapperUser = new Object(){boolean isPresent = false;};
+        Runnable isNotPresent = () -> {};
+        userService.findUserByEmail(email).ifPresentOrElse(u -> {
+            publisher.publishEvent(new RegistrationCompleteEvent(u, applicationUrl(request)));
+            wrapperUser.isPresent = true;
+        } , isNotPresent);
+
+        if(wrapperUser.isPresent) {
+            return ResponseEntity.ok(new MessageResponse("Token resent !"));
+        }
+
+        return ResponseEntity.badRequest().body(new MessageResponse("User not found, please signup first !"));
     }
 
     private String applicationUrl(HttpServletRequest request) {

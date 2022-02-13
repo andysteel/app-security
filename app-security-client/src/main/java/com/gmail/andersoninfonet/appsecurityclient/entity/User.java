@@ -1,5 +1,7 @@
 package com.gmail.andersoninfonet.appsecurityclient.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Table(schema = "user_registration", name = "user")
 @Data
 @NoArgsConstructor
-public class User {
+public class User implements Serializable {
     
     public User(UserRequest userDTO) {
         this.firstName = userDTO.firstName();

@@ -1,6 +1,7 @@
 package com.gmail.andersoninfonet.appsecurityclient.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import com.gmail.andersoninfonet.appsecurityclient.dto.UserRequest;
 import com.gmail.andersoninfonet.appsecurityclient.entity.User;
@@ -60,6 +61,11 @@ public class UserServiceImpl implements UserService {
         }, notPresent);
 
         return wrapperValid.isValid;
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
     
 }

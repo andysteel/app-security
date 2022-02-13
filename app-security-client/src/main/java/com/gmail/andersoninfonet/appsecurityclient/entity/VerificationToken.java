@@ -1,5 +1,6 @@
 package com.gmail.andersoninfonet.appsecurityclient.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(schema = "user_registration", name = "verification_token")
 @Data
 @NoArgsConstructor
-public class VerificationToken {
+public class VerificationToken implements Serializable {
 
     private static final int EXPIRATION_TIME = 10;
 

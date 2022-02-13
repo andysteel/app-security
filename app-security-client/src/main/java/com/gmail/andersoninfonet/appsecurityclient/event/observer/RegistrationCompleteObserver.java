@@ -1,9 +1,8 @@
 package com.gmail.andersoninfonet.appsecurityclient.event.observer;
 
-import java.util.UUID;
-
 import com.gmail.andersoninfonet.appsecurityclient.event.RegistrationCompleteEvent;
 import com.gmail.andersoninfonet.appsecurityclient.service.UserService;
+import com.gmail.andersoninfonet.appsecurityclient.utils.TokenUtil;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,7 @@ public class RegistrationCompleteObserver implements ApplicationListener<Registr
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event) {
         var user = event.getUser();
-        var token = UUID.randomUUID().toString();
+        var token = TokenUtil.generateToken();
         userService.saveVerificationTokenForUser(user, token);
 
         var url = String.format("%s/verifyRegistration?token=%s", event.getApplicationUrl(), token);
