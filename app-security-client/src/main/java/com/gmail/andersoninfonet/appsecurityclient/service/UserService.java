@@ -16,7 +16,7 @@ public interface UserService {
 
     Optional<User> findUserByEmail(String email);
 
-    void createPasswordResetTokenForUser(User u, String generateToken);
+    void createPasswordResetTokenForUser(User user, String generateToken);
 
     Optional<PasswordResetToken> validatePasswordResetToken(String token);
 
@@ -25,5 +25,7 @@ public interface UserService {
     void changePassword(User user, String newPassword);
 
     void deletePasswordResetToken(PasswordResetToken passwordResetToken);
+
+    boolean checkIfValidOldPassword(User user, String oldPassword);
     
 }

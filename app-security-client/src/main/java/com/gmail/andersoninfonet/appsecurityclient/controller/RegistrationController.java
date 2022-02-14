@@ -2,6 +2,7 @@ package com.gmail.andersoninfonet.appsecurityclient.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.gmail.andersoninfonet.appsecurityclient.dto.ChangePasswordRequest;
 import com.gmail.andersoninfonet.appsecurityclient.dto.MessageResponse;
 import com.gmail.andersoninfonet.appsecurityclient.dto.NewPasswordRequest;
 import com.gmail.andersoninfonet.appsecurityclient.dto.ResetPasswordRequest;
@@ -100,6 +101,23 @@ public class RegistrationController {
         }
 
         return ResponseEntity.badRequest().body(new MessageResponse("Invalid token to reset password !"));
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<MessageResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        var wrapperChange = new Object(){boolean isValid = false;};
+        userService.findUserByEmail(changePasswordRequest.email()).ifPresent(u -> {
+            if(userService.checkIfValidOldPassword(u, changePasswordRequest.oldPassword())) {
+                wrapperChange.isValid = true;
+                userService.changePassword(u, changePasswordRequest.newPassword());
+            }
+        });
+
+        if(wrapperChange.isValid) {
+            return ResponseEntity.ok(new MessageResponse("Password changed !"));
+        }
+
+        return ResponseEntity.badRequest().body(new MessageResponse("Fail to change password !"));
     }
 
     private String applicationUrl(HttpServletRequest request) {
