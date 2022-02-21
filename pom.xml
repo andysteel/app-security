@@ -15,6 +15,7 @@
   <modules>
     <module>app-security-client</module>
     <module>authorization-server</module>
+    <module>oauth-resource</module>
   </modules>
 
   <properties>
